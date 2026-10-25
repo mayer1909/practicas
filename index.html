@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprende y Deletrea - Nivel 10 Infantil</title>
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4fc3f7;
+      --bg: #f4f7f6;
+      --card-bg: #ffffff;
+      --text: #2d3748;
+      --correct: #48bb78;
+      --error: #f56565;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #e2e8f0;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .word-number {
+      font-size: 0.9rem;
+      color: #a0aec0;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .word-title {
+      font-size: 2.8rem;
+      margin: 10px 0;
+      color: var(--secondary);
+    }
+
+    .word-meaning {
+      font-size: 1.3rem;
+      color: #718096;
+      margin-bottom: 20px;
+    }
+
+    .controls-btn {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    button.btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, background 0.2s;
+    }
+
+    button.btn:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    button.btn-alt {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    button.btn-alt:hover {
+      background: #cbd5e0;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    /* Estilos para el modo Práctica */
+    .quiz-input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.2rem;
+      border: 2px solid #cbd5e0;
+      border-radius: 8px;
+      text-align: center;
+      margin: 15px 0;
+      outline: none;
+    }
+
+    .quiz-input:focus {
+      border-color: var(--primary);
+    }
+
+    .feedback {
+      font-size: 1.1rem;
+      font-weight: bold;
+      min-height: 28px;
+      margin-top: 10px;
+    }
+
+    .correct { color: var(--correct); }
+    .error { color: var(--error); }
+
+    /* Lista buscador */
+    .search-box {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e0;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    .word-list {
+      max-height: 350px;
+      overflow-y: auto;
+      text-align: left;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+    }
+
+    .list-item {
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+    }
+
+    .list-item:hover {
+      background-color: #f7fafc;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Spelling & Learning</h1>
+    <p>Nivel 10 Infantil — 100 Palabras</p>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setMode('study')">Modo Estudio</button>
+      <button class="tab-btn" onclick="setMode('quiz')">Reto de Deletreo</button>
+      <button class="tab-btn" onclick="setMode('list')">Ver Lista (1-100)</button>
+    </div>
+
+    <!-- TARJETA DE ESTUDIO -->
+    <div id="study-card" class="card">
+      <div class="word-number" id="study-index">PALABRA 1 DE 100</div>
+      <h2 class="word-title" id="study-word">weather</h2>
+      <div class="word-meaning" id="study-meaning">clima / tiempo</div>
+
+      <div class="controls-btn">
+        <button class="btn" onclick="pronounceWord()">🔊 Pronunciar</button>
+        <button class="btn btn-alt" onclick="spellWord()">🔤 Deletrear en voz alta</button>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="prevWord()">⬅ Anterior</button>
+        <button class="btn" onclick="nextWord()">Siguiente ➡</button>
+      </div>
+    </div>
+
+    <!-- TARJETA DE RETO / DELETREO -->
+    <div id="quiz-card" class="card" style="display: none;">
+      <div class="word-number" id="quiz-index">RETO - PALABRA 1 DE 100</div>
+      <div class="word-meaning" id="quiz-meaning" style="margin-top: 15px; font-weight: bold;">Significado: clima / tiempo</div>
+
+      <div class="controls-btn">
+        <button class="btn" onclick="pronounceWord()">🔊 Escuchar palabra</button>
+      </div>
+
+      <form onsubmit="checkSpelling(event)">
+        <input type="text" id="quiz-input" class="quiz-input" placeholder="Escribe la palabra en inglés..." autocomplete="off" />
+        <button type="submit" class="btn" style="width: 100%; justify-content: center;">Verificar</button>
+      </form>
+
+      <div class="feedback" id="quiz-feedback"></div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="prevWord()">⬅ Anterior</button>
+        <button class="btn" onclick="nextWord()">Siguiente ➡</button>
+      </div>
+    </div>
+
+    <!-- VISTA DE LISTA COMPLETA -->
+    <div id="list-card" class="card" style="display: none;">
+      <input type="text" id="search-bar" class="search-box" placeholder="Buscar palabra o traducción..." oninput="filterList()">
+      <div class="word-list" id="word-list-items"></div>
+    </div>
+  </div>
+
+  <script>
+    // Las 100 palabras extraídas de la lista del Nivel 10 Infantil con su traducción
+    const wordsData = [
+      { id: 1, word: "weather", meaning: "clima / tiempo" },
+      { id: 2, word: "sunny", meaning: "soleado" },
+      { id: 3, word: "rainy", meaning: "lluvioso" },
+      { id: 4, word: "cloudy", meaning: "nublado" },
+      { id: 5, word: "windy", meaning: "ventoso" },
+      { id: 6, word: "snowy", meaning: "nevado" },
+      { id: 7, word: "behind", meaning: "detrás de" },
+      { id: 8, word: "between", meaning: "entre (dos cosas)" },
+      { id: 9, word: "there is", meaning: "hay (singular)" },
+      { id: 10, word: "there are", meaning: "hay (plural)" },
+      { id: 11, word: "wonderful", meaning: "maravilloso" },
+      { id: 12, word: "practice", meaning: "practicar / práctica" },
+      { id: 13, word: "sports", meaning: "deportes" },
+      { id: 14, word: "study", meaning: "estudiar" },
+      { id: 15, word: "go to bed", meaning: "irse a la cama / acostarse" },
+      { id: 16, word: "flowers", meaning: "flores" },
+      { id: 17, word: "early", meaning: "temprano" },
+      { id: 18, word: "everyday", meaning: "todos los días / diario" },
+      { id: 19, word: "morning", meaning: "mañana" },
+      { id: 20, word: "afternoon", meaning: "tarde" },
+      { id: 21, word: "evening", meaning: "atardecer / noche" },
+      { id: 22, word: "night", meaning: "noche" },
+      { id: 23, word: "routine", meaning: "rutina" },
+      { id: 24, word: "stay", meaning: "quedarse / permanecer" },
+      { id: 25, word: "drive", meaning: "conducir / manejar" },
+      { id: 26, word: "speak", meaning: "hablar" },
+      { id: 27, word: "sing", meaning: "cantar" },
+      { id: 28, word: "play", meaning: "jugar / tocar (instrumento)" },
+      { id: 29, word: "read", meaning: "leer" },
+      { id: 30, word: "write", meaning: "escribir" },
+      { id: 31, word: "cook", meaning: "cocinar" },
+      { id: 32, word: "swim", meaning: "nadar" },
+      { id: 33, word: "walk", meaning: "caminar" },
+      { id: 34, word: "climb", meaning: "escalar / subir" },
+      { id: 35, word: "watch", meaning: "mirar / reloj" },
+      { id: 36, word: "listen", meaning: "escuchar" },
+      { id: 37, word: "action", meaning: "acción" },
+      { id: 38, word: "store", meaning: "tienda / almacén" },
+      { id: 39, word: "shop", meaning: "tienda / comprar" },
+      { id: 40, word: "sell", meaning: "vender" },
+      { id: 41, word: "expensive", meaning: "caro / costoso" },
+      { id: 42, word: "cheap", meaning: "barato" },
+      { id: 43, word: "dollars", meaning: "dólares" },
+      { id: 44, word: "oranges", meaning: "naranjas" },
+      { id: 45, word: "price", meaning: "precio" },
+      { id: 46, word: "cost", meaning: "costo / costar" },
+      { id: 47, word: "cashier", meaning: "cajero/a" },
+      { id: 48, word: "market", meaning: "mercado" },
+      { id: 49, word: "customer", meaning: "cliente" },
+      { id: 50, word: "receipt", meaning: "recibo / factura" },
+      { id: 51, word: "change", meaning: "cambio / vuelto" },
+      { id: 52, word: "wallet", meaning: "billetera / cartera" },
+      { id: 53, word: "discount", meaning: "descuento" },
+      { id: 54, word: "travel", meaning: "viajar" },
+      { id: 55, word: "trip", meaning: "viaje" },
+      { id: 56, word: "plan", meaning: "plan / planear" },
+      { id: 57, word: "by train", meaning: "en tren" },
+      { id: 58, word: "by airplane", meaning: "en avión" },
+      { id: 59, word: "by car", meaning: "en auto / carro" },
+      { id: 60, word: "airplane", meaning: "avión" },
+      { id: 61, word: "train", meaning: "tren" },
+      { id: 62, word: "boat", meaning: "bote / barco" },
+      { id: 63, word: "motorbike", meaning: "motocicleta" },
+      { id: 64, word: "bicycle", meaning: "bicicleta" },
+      { id: 65, word: "bike", meaning: "bici" },
+      { id: 66, word: "fast", meaning: "rápido" },
+      { id: 67, word: "slow", meaning: "lento" },
+      { id: 68, word: "ticket", meaning: "boleto / pasaje" },
+      { id: 69, word: "station", meaning: "estación" },
+      { id: 70, word: "airport", meaning: "aeropuerto" },
+      { id: 71, word: "harbor", meaning: "puerto" },
+      { id: 72, word: "journey", meaning: "trayecto / viaje largo" },
+      { id: 73, word: "luggage", meaning: "equipaje" },
+      { id: 74, word: "suitcase", meaning: "maleta" },
+      { id: 75, word: "passport", meaning: "pasaporte" },
+      { id: 76, word: "trivia", meaning: "trivias / curiosidades" },
+      { id: 77, word: "millionaire", meaning: "millonario" },
+      { id: 78, word: "sentence", meaning: "oración / frase" },
+      { id: 79, word: "dialogue", meaning: "diálogo" },
+      { id: 80, word: "question", meaning: "pregunta" },
+      { id: 81, word: "answer", meaning: "respuesta / responder" },
+      { id: 82, word: "building memories", meaning: "construir recuerdos" },
+      { id: 83, word: "celebration", meaning: "celebración" },
+      { id: 84, word: "celebrate", meaning: "celebrar" },
+      { id: 85, word: "holiday", meaning: "día festivo / vacaciones" },
+      { id: 86, word: "tradition", meaning: "tradición" },
+      { id: 87, word: "culture", meaning: "cultura" },
+      { id: 88, word: "memory", meaning: "memoria / recuerdo" },
+      { id: 89, word: "craft", meaning: "manualidad / artesanía" },
+      { id: 90, word: "respect", meaning: "respeto / respetar" },
+      { id: 91, word: "fabulous trip", meaning: "viaje fabuloso" },
+      { id: 92, word: "show and tell", meaning: "mostrar y contar" },
+      { id: 93, word: "presentation", meaning: "presentación" },
+      { id: 94, word: "speech", meaning: "discurso" },
+      { id: 95, word: "stage", meaning: "escenario / etapa" },
+      { id: 96, word: "audience", meaning: "audiencia / público" },
+      { id: 97, word: "applause", meaning: "aplausos" },
+      { id: 98, word: "trophy", meaning: "trofeo" },
+      { id: 99, word: "medal", meaning: "medalla" },
+      { id: 100, word: "spelling bee", meaning: "concurso de deletreo" }
+    ];
+
+    let currentIndex = 0;
+
+    function updateCard() {
+      const current = wordsData[currentIndex];
+      // Modo Estudio
+      document.getElementById('study-index').textContent = `Palabra ${current.id} de 100`;
+      document.getElementById('study-word').textContent = current.word;
+      document.getElementById('study-meaning').textContent = current.meaning;
+
+      // Modo Reto
+      document.getElementById('quiz-index').textContent = `Reto - Palabra ${current.id} de 100`;
+      document.getElementById('quiz-meaning').textContent = `Significado: ${current.meaning}`;
+      document.getElementById('quiz-input').value = '';
+      document.getElementById('quiz-feedback').textContent = '';
+    }
+
+    function nextWord() {
+      if (currentIndex < wordsData.length - 1) {
+        currentIndex++;
+        updateCard();
+      }
+    }
+
+    function prevWord() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      }
+    }
+
+    // Funciones de Síntesis de Voz
+    function pronounceWord() {
+      window.speechSynthesis.cancel();
+      const current = wordsData[currentIndex];
+      const utterance = new SpeechSynthesisUtterance(current.word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function spellWord() {
+      window.speechSynthesis.cancel();
+      const word = wordsData[currentIndex].word;
+      
+      // Primero dice la palabra completa
+      const startUtterance = new SpeechSynthesisUtterance(word);
+      startUtterance.lang = 'en-US';
+      window.speechSynthesis.speak(startUtterance);
+
+      // Deletrea letra por letra
+      for (let char of word) {
+        if (char === ' ') {
+          const pause = new SpeechSynthesisUtterance("space");
+          pause.lang = 'en-US';
+          window.speechSynthesis.speak(pause);
+        } else {
+          const letterUtterance = new SpeechSynthesisUtterance(char.toUpperCase());
+          letterUtterance.lang = 'en-US';
+          letterUtterance.rate = 0.8;
+          window.speechSynthesis.speak(letterUtterance);
+        }
+      }
+
+      // Repite la palabra al final (estilo Spelling Bee)
+      const endUtterance = new SpeechSynthesisUtterance(word);
+      endUtterance.lang = 'en-US';
+      window.speechSynthesis.speak(endUtterance);
+    }
+
+    function checkSpelling(e) {
+      e.preventDefault();
+      const userValue = document.getElementById('quiz-input').value.trim().toLowerCase();
+      const actualWord = wordsData[currentIndex].word.toLowerCase();
+      const feedback = document.getElementById('quiz-feedback');
+
+      if (userValue === actualWord) {
+        feedback.className = "feedback correct";
+        feedback.textContent = "¡Correcto! Excelente deletreo 🎉";
+        pronounceWord();
+      } else {
+        feedback.className = "feedback error";
+        feedback.textContent = `Inténtalo de nuevo. La respuesta correcta era: "${wordsData[currentIndex].word}"`;
+      }
+    }
+
+    function setMode(mode) {
+      const studyCard = document.getElementById('study-card');
+      const quizCard = document.getElementById('quiz-card');
+      const listCard = document.getElementById('list-card');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      if (mode === 'study') {
+        buttons[0].classList.add('active');
+        studyCard.style.display = 'block';
+        quizCard.style.display = 'none';
+        listCard.style.display = 'none';
+      } else if (mode === 'quiz') {
+        buttons[1].classList.add('active');
+        studyCard.style.display = 'none';
+        quizCard.style.display = 'block';
+        listCard.style.display = 'none';
+        pronounceWord();
+      } else if (mode === 'list') {
+        buttons[2].classList.add('active');
+        studyCard.style.display = 'none';
+        quizCard.style.display = 'none';
+        listCard.style.display = 'block';
+        renderFullList();
+      }
+    }
+
+    function renderFullList(filter = '') {
+      const listContainer = document.getElementById('word-list-items');
+      listContainer.innerHTML = '';
+
+      const filtered = wordsData.filter(item => 
+        item.word.toLowerCase().includes(filter.toLowerCase()) || 
+        item.meaning.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `<span><strong>#${item.id}</strong> ${item.word}</span> <span style="color:#718096">${item.meaning}</span>`;
+        div.onclick = () => {
+          currentIndex = item.id - 1;
+          setMode('study');
+          updateCard();
+        };
+        listContainer.appendChild(div);
+      });
+    }
+
+    function filterList() {
+      const query = document.getElementById('search-bar').value;
+      renderFullList(query);
+    }
+
+    // Inicializar
+    updateCard();
+  </script>
+</body>
+</html>
