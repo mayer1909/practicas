@@ -3,1326 +3,508 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CrediControl Cloud - Reportes y Abonos por Marca</title>
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- SheetJS (XLSX) para exportar a Excel -->
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-  <!-- Firebase SDK Compat -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          },
-          colors: {
-            fintech: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-            },
-            boutique: {
-              50: '#faf5ff',
-              100: '#f3e8ff',
-              200: '#e9d5ff',
-              500: '#a855f7',
-              600: '#9333ea',
-              700: '#7e22ce',
-              800: '#6b21a8'
-            },
-            exclusive: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af'
-            },
-            beauty: {
-              50: '#fdf2f8',
-              100: '#fce7f3',
-              200: '#fbcfe8',
-              500: '#ec4899',
-              600: '#db2777',
-              700: '#be185d',
-              800: '#9d174d'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  <title>Aprende y Deletrea - Nivel 10 Infantil</title>
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    .modal-backdrop { transition: opacity 0.2s ease-in-out; }
-    .modal-card { transition: transform 0.2s ease-out, opacity 0.2s ease-out; }
-    .pulse-sync { animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4fc3f7;
+      --bg: #f4f7f6;
+      --card-bg: #ffffff;
+      --text: #2d3748;
+      --correct: #48bb78;
+      --error: #f56565;
     }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-    .shake-anim { animation: shake 0.45s ease-in-out; }
 
-    .brand-radio-label { cursor: pointer; user-select: none; transition: all 0.2s ease; }
-    .brand-radio-input:checked + .brand-btn-boutique {
-      background: linear-gradient(135deg, #7e22ce, #9333ea);
-      color: #ffffff;
-      border-color: #6b21a8;
-      box-shadow: 0 4px 14px rgba(147, 51, 234, 0.4);
-      transform: translateY(-1px);
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .brand-radio-input:checked + .brand-btn-exclusive {
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
-      color: #ffffff;
-      border-color: #1e40af;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-      transform: translateY(-1px);
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .brand-radio-input:checked + .brand-btn-beauty {
-      background: linear-gradient(135deg, #be185d, #e11d48);
-      color: #ffffff;
-      border-color: #9f1239;
-      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
-      transform: translateY(-1px);
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #e2e8f0;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .word-number {
+      font-size: 0.9rem;
+      color: #a0aec0;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .word-title {
+      font-size: 2.8rem;
+      margin: 10px 0;
+      color: var(--secondary);
+    }
+
+    .word-meaning {
+      font-size: 1.3rem;
+      color: #718096;
+      margin-bottom: 20px;
+    }
+
+    .controls-btn {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    button.btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, background 0.2s;
+    }
+
+    button.btn:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    button.btn-alt {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    button.btn-alt:hover {
+      background: #cbd5e0;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    /* Estilos para el modo Práctica */
+    .quiz-input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.2rem;
+      border: 2px solid #cbd5e0;
+      border-radius: 8px;
+      text-align: center;
+      margin: 15px 0;
+      outline: none;
+    }
+
+    .quiz-input:focus {
+      border-color: var(--primary);
+    }
+
+    .feedback {
+      font-size: 1.1rem;
+      font-weight: bold;
+      min-height: 28px;
+      margin-top: 10px;
+    }
+
+    .correct { color: var(--correct); }
+    .error { color: var(--error); }
+
+    /* Lista buscador */
+    .search-box {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e0;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    .word-list {
+      max-height: 350px;
+      overflow-y: auto;
+      text-align: left;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+    }
+
+    .list-item {
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+    }
+
+    .list-item:hover {
+      background-color: #f7fafc;
     }
   </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen bg-slate-900 flex flex-col">
+<body>
 
-  <!-- CONTENEDOR DE ALERTAS / TOAST -->
-  <div id="toastContainer" class="fixed top-5 right-5 z-[250] flex flex-col gap-2 pointer-events-none"></div>
+  <header>
+    <h1>Spelling & Learning</h1>
+    <p>Nivel 10 Infantil — 100 Palabras</p>
+  </header>
 
-  <!-- ========================================================================= -->
-  <!-- 1. PANTALLA OBLIGATORIA DE INICIO DE SESIÓN (LOGIN)                       -->
-  <!-- ========================================================================= -->
-  <div id="loginScreen" class="fixed inset-0 z-[100] bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex items-center justify-center p-4">
-    <div id="loginCard" class="w-full max-w-md bg-slate-900/95 border border-slate-800 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 text-white relative overflow-hidden">
-      
-      <!-- Destellos de fondo -->
-      <div class="absolute -top-24 -right-24 w-56 h-56 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -left-24 w-56 h-56 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setMode('study')">Modo Estudio</button>
+      <button class="tab-btn" onclick="setMode('quiz')">Reto de Deletreo</button>
+      <button class="tab-btn" onclick="setMode('list')">Ver Lista (1-100)</button>
+    </div>
 
-      <!-- Logotipo de Diamante y Título -->
-      <div class="text-center space-y-2 relative">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 mx-auto flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white text-3xl font-black mb-3">
-          <i class="fa-solid fa-gem"></i>
-        </div>
-        <h1 class="text-2xl font-black tracking-tight text-white">CrediControl Cloud</h1>
-        <p class="text-xs text-slate-400">Control de Ventas a Crédito y Abonos por Marca</p>
-        
-        <!-- Distintivos de Marcas Oficiales -->
-        <div class="flex items-center justify-center gap-1.5 pt-1.5 flex-wrap">
-          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-boutique-100 text-boutique-800 border border-boutique-200">
-            <i class="fa-solid fa-person-dress text-xs"></i> EPI Boutique
-          </span>
-          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-exclusive-100 text-exclusive-800 border border-exclusive-200">
-            <i class="fa-solid fa-crown text-[10px]"></i> Exclusive
-          </span>
-          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-beauty-100 text-beauty-800 border border-beauty-200">
-            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Beauty
-          </span>
-        </div>
+    <!-- TARJETA DE ESTUDIO -->
+    <div id="study-card" class="card">
+      <div class="word-number" id="study-index">PALABRA 1 DE 100</div>
+      <h2 class="word-title" id="study-word">weather</h2>
+      <div class="word-meaning" id="study-meaning">clima / tiempo</div>
+
+      <div class="controls-btn">
+        <button class="btn" onclick="pronounceWord()">🔊 Pronunciar</button>
+        <button class="btn btn-alt" onclick="spellWord()">🔤 Deletrear en voz alta</button>
       </div>
 
-      <!-- Alerta de Error -->
-      <div id="loginErrorMsg" class="hidden p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
-        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i>
-        <span id="loginErrorText">Usuario o contraseña incorrectos. Intente de nuevo.</span>
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="prevWord()">⬅ Anterior</button>
+        <button class="btn" onclick="nextWord()">Siguiente ➡</button>
+      </div>
+    </div>
+
+    <!-- TARJETA DE RETO / DELETREO -->
+    <div id="quiz-card" class="card" style="display: none;">
+      <div class="word-number" id="quiz-index">RETO - PALABRA 1 DE 100</div>
+      <div class="word-meaning" id="quiz-meaning" style="margin-top: 15px; font-weight: bold;">Significado: clima / tiempo</div>
+
+      <div class="controls-btn">
+        <button class="btn" onclick="pronounceWord()">🔊 Escuchar palabra</button>
       </div>
 
-      <!-- Formulario de Acceso -->
-      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 relative">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Usuario</label>
-          <div class="relative">
-            <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-            <input type="text" id="loginUsername" required autocomplete="username" placeholder="Nombre de usuario"
-              class="w-full pl-10 pr-4 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Contraseña</label>
-          <div class="relative">
-            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••"
-              class="w-full pl-10 pr-11 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition p-1">
-              <i id="eyeIcon" class="fa-regular fa-eye text-sm"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" id="btnLoginSubmit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-900/40 transition transform active:scale-[0.99] flex items-center justify-center gap-2">
-          <span>Ingresar al Sistema</span>
-          <i class="fa-solid fa-arrow-right text-xs"></i>
-        </button>
+      <form onsubmit="checkSpelling(event)">
+        <input type="text" id="quiz-input" class="quiz-input" placeholder="Escribe la palabra en inglés..." autocomplete="off" />
+        <button type="submit" class="btn" style="width: 100%; justify-content: center;">Verificar</button>
       </form>
 
-      <div class="pt-3 border-t border-slate-800/80 text-center">
-        <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-shield-halved text-emerald-400"></i> Acceso Seguro Protegido
-        </p>
-      </div>
-    </div>
-  </div>
+      <div class="feedback" id="quiz-feedback"></div>
 
-  <!-- ========================================================================= -->
-  <!-- 2. APLICACIÓN PRINCIPAL (TRAS INICIAR SESIÓN)                             -->
-  <!-- ========================================================================= -->
-  <div id="mainApp" class="hidden min-h-screen flex-col bg-slate-50 flex-1">
-    
-    <!-- NAVBAR SUPERIOR -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 gap-2">
-          
-          <!-- Logo Diamante & Marcas -->
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-md">
-              <i class="fa-solid fa-gem text-lg"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-black text-slate-900 tracking-tight text-lg">CREDICONTROL</span>
-                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-boutique-100 text-boutique-800 border border-boutique-200">
-                  <i class="fa-solid fa-person-dress text-xs"></i> EPI Boutique
-                </span>
-                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-exclusive-100 text-exclusive-800 border border-exclusive-200">
-                  <i class="fa-solid fa-crown text-[9px]"></i> Exclusive
-                </span>
-                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-beauty-100 text-beauty-800 border border-beauty-200">
-                  <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i> Beauty
-                </span>
-              </div>
-              <p class="text-xs text-slate-500 hidden sm:block">Control de Cartera de Crédito y Abonos por Marca</p>
-            </div>
-          </div>
-
-          <!-- Botones de Acción de Navbar -->
-          <div class="flex items-center gap-2 sm:gap-2.5">
-            
-            <!-- BOTÓN DESTACADO: REPORTE POR MARCA -->
-            <button onclick="openBrandReportModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-sm transition" title="Reporte Financiero y Comparativa por Marca">
-              <i class="fa-solid fa-chart-pie text-xs"></i>
-              <span>Reporte por Marca</span>
-            </button>
-
-            <!-- Estado Conexión Firebase / Google Sheets -->
-            <button id="btnSheetsStatus" onclick="openSheetsModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl border transition shadow-sm bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100" title="Configurar respaldo">
-              <span id="cloudStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-              <span id="cloudStatusText" class="hidden sm:inline">Nube Conectada</span>
-              <i class="fa-solid fa-cloud-arrow-up text-xs text-slate-500"></i>
-            </button>
-
-            <!-- Exportar a Excel -->
-            <button onclick="exportToExcelWorkbook()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition shadow-sm" title="Descargar libro Excel completo">
-              <i class="fa-solid fa-file-excel text-emerald-600"></i>
-              <span class="hidden md:inline">Excel</span>
-            </button>
-
-            <!-- Registrar Cliente -->
-            <button onclick="openClientCreationModal()" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition">
-              <i class="fa-solid fa-user-plus text-xs"></i>
-              <span class="hidden sm:inline">Cliente</span>
-            </button>
-
-            <!-- Nueva Venta -->
-            <button onclick="openGlobalSaleModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-sm transition">
-              <i class="fa-solid fa-cart-plus text-xs"></i>
-              <span>Venta</span>
-            </button>
-
-            <!-- Registrar Abono -->
-            <button onclick="openGlobalPaymentModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-xl bg-fintech-600 hover:bg-fintech-700 text-white shadow-sm shadow-fintech-200 transition">
-              <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
-              <span>Abonar</span>
-            </button>
-
-            <!-- CERRAR SESIÓN -->
-            <button onclick="logoutSession()" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 transition" title="Cerrar Sesión">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              <span class="hidden lg:inline">Salir</span>
-            </button>
-
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- BARRA DE INFORMACIÓN DE SINCRONIZACIÓN -->
-    <div id="syncBannerBar" class="bg-slate-100 border-b border-slate-200 px-4 py-1.5 text-xs text-slate-600">
-      <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-center gap-2">
-          <span id="syncIndicatorIcon"><i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i></span>
-          <span id="syncLastTimeLabel">Sincronización en la nube: Firestore & Google Sheets Activo</span>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="triggerFullSync()" id="btnQuickSync" class="text-fintech-700 font-semibold hover:underline flex items-center gap-1">
-            <i class="fa-solid fa-rotate text-[11px]"></i> Sincronizar Ahora
-          </button>
-          <span class="text-slate-400 hidden sm:inline">|</span>
-          <button onclick="openSheetsModal()" class="text-indigo-600 font-medium hover:underline text-xs">
-            <i class="fa-solid fa-gear text-[11px]"></i> Ajustes de Nube / Sheets
-          </button>
-        </div>
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="prevWord()">⬅ Anterior</button>
+        <button class="btn" onclick="nextWord()">Siguiente ➡</button>
       </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-      <!-- TARJETAS DE MÉTRICAS (KPIS) CON DESGLOSE POR MARCA -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <!-- Deuda Total Global -->
-        <div class="bg-white p-5 rounded-2xl border border-rose-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <p class="text-xs font-bold uppercase tracking-wider text-rose-500">Deuda Total Cartera</p>
-            <div class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-600">
-              <i class="fa-solid fa-money-bill-trend-up"></i>
-            </div>
-          </div>
-          <div class="mt-2">
-            <h3 id="statTotalDebt" class="text-2xl font-black text-rose-700">$0.00</h3>
-            <p class="text-[11px] text-slate-400">Suma total pendiente en todas las marcas</p>
-          </div>
-        </div>
-
-        <!-- Deuda en EPI Boutique -->
-        <div class="bg-white p-5 rounded-2xl border border-boutique-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <i class="fa-solid fa-person-dress text-boutique-600"></i>
-              <p class="text-xs font-bold uppercase tracking-wider text-boutique-700">EPI Boutique</p>
-            </div>
-            <span class="text-[10px] bg-boutique-50 text-boutique-700 px-2 py-0.5 rounded-full font-bold border border-boutique-200">Marca</span>
-          </div>
-          <div class="mt-2">
-            <h3 id="statDebtBoutique" class="text-2xl font-black text-boutique-700">$0.00</h3>
-            <p class="text-[11px] text-slate-400">Deuda por cobrar en Boutique</p>
-          </div>
-        </div>
-
-        <!-- Deuda en Exclusive -->
-        <div class="bg-white p-5 rounded-2xl border border-exclusive-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <i class="fa-solid fa-crown text-exclusive-600"></i>
-              <p class="text-xs font-bold uppercase tracking-wider text-exclusive-700">Exclusive</p>
-            </div>
-            <span class="text-[10px] bg-exclusive-50 text-exclusive-700 px-2 py-0.5 rounded-full font-bold border border-exclusive-200">Marca</span>
-          </div>
-          <div class="mt-2">
-            <h3 id="statDebtExclusive" class="text-2xl font-black text-exclusive-700">$0.00</h3>
-            <p class="text-[11px] text-slate-400">Deuda por cobrar en Exclusive</p>
-          </div>
-        </div>
-
-        <!-- Deuda en Beauty -->
-        <div class="bg-white p-5 rounded-2xl border border-beauty-200 shadow-sm relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <i class="fa-solid fa-wand-magic-sparkles text-beauty-600"></i>
-              <p class="text-xs font-bold uppercase tracking-wider text-beauty-700">Beauty</p>
-            </div>
-            <span class="text-[10px] bg-beauty-50 text-beauty-700 px-2 py-0.5 rounded-full font-bold border border-beauty-200">Marca</span>
-          </div>
-          <div class="mt-2">
-            <h3 id="statDebtBeauty" class="text-2xl font-black text-beauty-700">$0.00</h3>
-            <p class="text-[11px] text-slate-400">Deuda por cobrar en Beauty</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- SEGUNDA FILA DE KPIs (TOTAL ABONADO Y CLIENTES) -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500 uppercase">Total Recaudado en Abonos</p>
-            <h4 id="statTotalPaid" class="text-xl font-black text-emerald-600">$0.00</h4>
-          </div>
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-circle-dollar-to-slot"></i>
-          </div>
-        </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500 uppercase">Clientes con Saldo Deudor</p>
-            <h4 id="statDebtorCount" class="text-xl font-black text-amber-600">0</h4>
-          </div>
-          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-user-clock"></i>
-          </div>
-        </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500 uppercase">Total Clientes en Cartera</p>
-            <h4 id="statTotalClients" class="text-xl font-black text-indigo-600">0</h4>
-          </div>
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-users"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- TABLA PRINCIPAL DE CUENTAS POR COBRAR -->
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        
-        <!-- Barra de Búsqueda y Filtros -->
-        <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h2 class="text-lg font-bold text-slate-900">Listado de Cuentas por Cobrar & Clientes</h2>
-            <p class="text-xs text-slate-500">Muestra la deuda discriminada por Marca (Boutique, Exclusive, Beauty) y el saldo deudor consolidado.</p>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            <!-- Input Búsqueda -->
-            <div class="relative flex-1 sm:w-64">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-              <input type="text" id="searchInput" oninput="renderClientsTable()" placeholder="Buscar cliente o cédula..." 
-                class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-
-            <!-- Filtro de estado -->
-            <select id="filterStatus" onchange="renderClientsTable()" class="px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700">
-              <option value="debt" selected>Con Saldo Pendiente</option>
-              <option value="all">Todos los clientes</option>
-              <option value="paid">Solventes / Al Día ($0.00)</option>
-            </select>
-
-            <!-- Acceso directo al nuevo reporte -->
-            <button onclick="openBrandReportModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-xl bg-violet-50 text-violet-700 border border-violet-200 hover:bg-violet-100 transition shadow-sm">
-              <i class="fa-solid fa-file-invoice-dollar text-violet-600"></i>
-              <span>Reporte Financiero</span>
-            </button>
-
-            <!-- Imprimir Reporte Consolidado -->
-            <button onclick="printGeneralReport()" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition" title="Imprimir Reporte General">
-              <i class="fa-solid fa-print"></i>
-              <span class="hidden sm:inline">Imprimir</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Tabla -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-slate-50/80 text-slate-500 uppercase font-semibold text-xs border-b border-slate-200">
-                <th class="py-3.5 px-4 sm:px-6">Cliente & Documento</th>
-                <th class="py-3.5 px-4">Deuda por Marca</th>
-                <th class="py-3.5 px-4 text-right">Total Compras</th>
-                <th class="py-3.5 px-4 text-right">Total Abonado</th>
-                <th class="py-3.5 px-4 text-right">Saldo Deudor Total</th>
-                <th class="py-3.5 px-4 text-center">Estado</th>
-                <th class="py-3.5 px-4 sm:px-6 text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="clientsTableBody" class="divide-y divide-slate-100">
-              <!-- Render dinámico -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Mensaje sin resultados -->
-        <div id="noDataMessage" class="hidden py-12 text-center">
-          <i class="fa-regular fa-folder-open text-4xl text-slate-300 mb-2"></i>
-          <p class="text-slate-500 text-sm">No se encontraron clientes con los filtros aplicados.</p>
-        </div>
-      </div>
-    </main>
-
-  </div>
-
-  <!-- MODAL: REPORTE GENERAL Y COMPARATIVO POR MARCA -->
-  <div id="modalBrandReport" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 modal-backdrop">
-    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[94vh] flex flex-col overflow-hidden modal-card border border-slate-200">
-      <div class="p-5 border-b border-slate-200 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3.5">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-indigo-500 to-purple-500 text-white flex items-center justify-center font-black text-xl shadow-lg">
-            <i class="fa-solid fa-chart-pie"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h2 class="text-lg sm:text-xl font-black text-white">Reporte Financiero por Marca</h2>
-              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                Auditoría en Tiempo Real
-              </span>
-            </div>
-            <p class="text-xs text-slate-300 mt-0.5">Ventas a crédito, recaudación por abonos, cobranza efectiva y deuda pendiente</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="exportBrandReportToExcel()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition">
-            <i class="fa-solid fa-file-excel"></i> Exportar
-          </button>
-          <button onclick="printBrandFinancialReport()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-white text-slate-900 hover:bg-slate-100 shadow-sm transition">
-            <i class="fa-solid fa-print text-indigo-600"></i> Imprimir A4
-          </button>
-          <button onclick="closeModalDirect('modalBrandReport')" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition">
-            <i class="fa-solid fa-xmark text-xl"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="font-bold text-slate-600 uppercase mr-1"><i class="fa-regular fa-calendar text-indigo-600"></i> Período:</span>
-          <button onclick="setReportPeriod('all')" id="repFilterAll" class="px-3 py-1.5 font-bold rounded-xl bg-indigo-600 text-white shadow-sm">Todo el Histórico</button>
-          <button onclick="setReportPeriod('today')" id="repFilterToday" class="px-3 py-1.5 font-medium rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100">Hoy</button>
-          <button onclick="setReportPeriod('week')" id="repFilterWeek" class="px-3 py-1.5 font-medium rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100">Esta Semana</button>
-          <button onclick="setReportPeriod('month')" id="repFilterMonth" class="px-3 py-1.5 font-medium rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100">Este Mes</button>
-        </div>
-        <div class="text-slate-500 font-semibold" id="reportPeriodLabel">Mostrando: Histórico Completo</div>
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-4 rounded-2xl shadow-sm border border-slate-800">
-            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Ventas Crédito</span>
-            <div id="repGlobalSales" class="text-2xl font-black text-white mt-1">$0.00</div>
-          </div>
-          <div class="bg-gradient-to-br from-emerald-900 to-teal-950 text-white p-4 rounded-2xl shadow-sm border border-emerald-800">
-            <span class="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">Total Abonos Cobrados</span>
-            <div id="repGlobalPaid" class="text-2xl font-black text-emerald-400 mt-1">$0.00</div>
-          </div>
-          <div class="bg-gradient-to-br from-rose-950 to-red-950 text-white p-4 rounded-2xl shadow-sm border border-rose-900">
-            <span class="text-[10px] uppercase font-bold text-rose-300 tracking-wider">Saldo Deudor Activo</span>
-            <div id="repGlobalDebt" class="text-2xl font-black text-rose-400 mt-1">$0.00</div>
-          </div>
-          <div class="bg-gradient-to-br from-indigo-900 to-purple-950 text-white p-4 rounded-2xl shadow-sm border border-purple-900">
-            <span class="text-[10px] uppercase font-bold text-purple-300 tracking-wider">Efectividad Cobranza</span>
-            <div id="repGlobalRate" class="text-2xl font-black text-purple-300 mt-1">0.0%</div>
-            <div class="w-full bg-slate-700/50 rounded-full h-1.5 mt-2 overflow-hidden">
-              <div id="repGlobalRateBar" class="bg-gradient-to-r from-emerald-400 to-teal-300 h-1.5 rounded-full" style="width: 0%"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-          <div class="p-4 border-b border-slate-200 bg-slate-50">
-            <h3 class="text-sm font-bold text-slate-800">Cuadro Comparativo por Marca</h3>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="bg-slate-100/70 text-slate-500 uppercase font-semibold text-xs border-b border-slate-200">
-                  <th class="py-3 px-4">Marca</th>
-                  <th class="py-3 px-4 text-right">Ventas ($)</th>
-                  <th class="py-3 px-4 text-right">Abonos ($)</th>
-                  <th class="py-3 px-4 text-right">Deuda ($)</th>
-                  <th class="py-3 px-4 text-center">% Cobro</th>
-                </tr>
-              </thead>
-              <tbody id="repBrandTableBody" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
-        <button onclick="closeModalDirect('modalBrandReport')" class="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-800 text-white hover:bg-slate-900 transition">Cerrar</button>
-      </div>
+    <!-- VISTA DE LISTA COMPLETA -->
+    <div id="list-card" class="card" style="display: none;">
+      <input type="text" id="search-bar" class="search-box" placeholder="Buscar palabra o traducción..." oninput="filterList()">
+      <div class="word-list" id="word-list-items"></div>
     </div>
   </div>
 
-  <!-- MODAL: FICHA / HISTORIAL DEL CLIENTE -->
-  <div id="modalClientHistory" class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 modal-backdrop">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden modal-card">
-      <div class="p-5 border-b border-slate-200 bg-slate-50/90 flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3.5">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-xl shadow">
-            <span id="detailClientAvatar">C</span>
-          </div>
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h2 id="detailClientName" class="text-lg font-bold text-slate-900">Cliente</h2>
-              <span id="detailClientBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold">Estado</span>
-              <button onclick="triggerEditClientFromHistory()" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition inline-flex items-center gap-1.5 shadow-sm">
-                <i class="fa-solid fa-user-pen text-[11px]"></i> Editar Cliente
-              </button>
-            </div>
-            <p class="text-xs text-slate-500 flex items-center gap-3 mt-1 flex-wrap">
-              <span><i class="fa-regular fa-id-card text-slate-400"></i> <span id="detailClientDoc">Doc</span></span>
-              <span><i class="fa-solid fa-phone text-slate-400"></i> <span id="detailClientPhone">Tel</span></span>
-              <span id="detailClientLimitBadge" class="text-purple-700 font-semibold"></span>
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <div class="text-right">
-            <span class="text-xs uppercase font-bold text-slate-400">Deuda Consolidada</span>
-            <div id="detailClientBalance" class="text-2xl sm:text-3xl font-black text-rose-600">$0.00</div>
-          </div>
-          <button onclick="closeClientHistoryModal()" class="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-200 transition">
-            <i class="fa-solid fa-xmark text-xl"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- DESGLOSE DEUDA POR MARCA (3 TARJETAS) -->
-      <div class="p-4 bg-slate-100/70 border-b border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="bg-white p-3 rounded-xl border border-boutique-200 flex items-center justify-between">
-          <div>
-            <div class="flex items-center gap-1 text-xs font-bold text-boutique-700">
-              <i class="fa-solid fa-person-dress"></i> EPI Boutique
-            </div>
-            <div id="detailDebtBoutique" class="text-lg font-black text-boutique-800">$0.00</div>
-          </div>
-          <button onclick="triggerQuickBrandPayment('EPI Boutique')" id="btnAbonarBoutique" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-boutique-50 text-boutique-700 border border-boutique-200 transition">Abonar</button>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-exclusive-200 flex items-center justify-between">
-          <div>
-            <div class="flex items-center gap-1 text-xs font-bold text-exclusive-700">
-              <i class="fa-solid fa-crown"></i> Exclusive
-            </div>
-            <div id="detailDebtExclusive" class="text-lg font-black text-exclusive-800">$0.00</div>
-          </div>
-          <button onclick="triggerQuickBrandPayment('Exclusive')" id="btnAbonarExclusive" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-exclusive-50 text-exclusive-700 border border-exclusive-200 transition">Abonar</button>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-beauty-200 flex items-center justify-between">
-          <div>
-            <div class="flex items-center gap-1 text-xs font-bold text-beauty-700">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Beauty
-            </div>
-            <div id="detailDebtBeauty" class="text-lg font-black text-beauty-800">$0.00</div>
-          </div>
-          <button onclick="triggerQuickBrandPayment('Beauty')" id="btnAbonarBeauty" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-beauty-50 text-beauty-700 border border-beauty-200 transition">Abonar</button>
-        </div>
-      </div>
-
-      <div class="px-5 py-3 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3 text-sm">
-        <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
-          <button onclick="setHistoryFilter('all')" id="btnFilterAll" class="px-3 py-1 text-xs font-semibold rounded-lg bg-white shadow-sm text-slate-800">Todos</button>
-          <button onclick="setHistoryFilter('sales')" id="btnFilterSales" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900">Compras (+)</button>
-          <button onclick="setHistoryFilter('payments')" id="btnFilterPayments" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900">Abonos (-)</button>
-        </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="triggerSaleFromHistory()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm transition">
-            <i class="fa-solid fa-cart-plus"></i> + Registrar Compra
-          </button>
-          <button onclick="triggerPaymentFromHistory()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-fintech-600 text-white shadow-sm transition">
-            <i class="fa-solid fa-hand-holding-dollar"></i> + Abonar a Cuenta
-          </button>
-          <button onclick="sendWhatsAppSummary()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition">
-            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
-          </button>
-          <button onclick="printAccountStatement()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition shadow-sm">
-            <i class="fa-solid fa-print"></i> Imprimir Estado
-          </button>
-        </div>
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-5">
-        <table class="w-full text-left text-sm border-collapse">
-          <thead>
-            <tr class="text-xs uppercase font-semibold text-slate-400 border-b border-slate-200 pb-2">
-              <th class="py-2.5 px-3">Fecha</th>
-              <th class="py-2.5 px-3">Marca</th>
-              <th class="py-2.5 px-3">Concepto / Medio</th>
-              <th class="py-2.5 px-3 text-right">Monto USD</th>
-              <th class="py-2.5 px-3 text-right">Saldo Marca</th>
-              <th class="py-2.5 px-3 text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="historyTableBody" class="divide-y divide-slate-100"></tbody>
-        </table>
-        <div id="noHistoryMessage" class="hidden py-12 text-center text-slate-400 text-sm">
-          No hay movimientos registrados para este cliente.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: REGISTRAR COMPRA A CRÉDITO -->
-  <div id="modalSale" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 modal-backdrop">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform modal-card border border-purple-200">
-      <div class="px-6 py-4 border-b border-purple-100 bg-purple-50/70 flex items-center justify-between">
-        <h3 class="text-base font-bold text-purple-950 flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping text-purple-600"></i> Registrar Compra a Crédito
-        </h3>
-        <button onclick="dismissActionModal('modalSale')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <form id="saleForm" onsubmit="handleSaveSale(event)" class="p-6 space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Marca *</label>
-          <div class="grid grid-cols-3 gap-2.5">
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="saleBrand" value="EPI Boutique" checked class="brand-radio-input sr-only">
-              <div class="brand-btn-boutique border border-slate-200 rounded-xl p-3 text-center bg-slate-50">
-                <i class="fa-solid fa-person-dress text-xl block mb-1"></i>
-                <span class="font-extrabold text-xs">EPI Boutique</span>
-              </div>
-            </label>
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="saleBrand" value="Exclusive" class="brand-radio-input sr-only">
-              <div class="brand-btn-exclusive border border-slate-200 rounded-xl p-3 text-center bg-slate-50">
-                <i class="fa-solid fa-crown text-lg block mb-1"></i>
-                <span class="font-extrabold text-xs">Exclusive</span>
-              </div>
-            </label>
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="saleBrand" value="Beauty" class="brand-radio-input sr-only">
-              <div class="brand-btn-beauty border border-slate-200 rounded-xl p-3 text-center bg-slate-50">
-                <i class="fa-solid fa-wand-magic-sparkles text-lg block mb-1"></i>
-                <span class="font-extrabold text-xs">Beauty</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Cliente *</label>
-          <select id="saleClientId" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200"></select>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Fecha *</label>
-            <input type="date" id="saleDate" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Monto ($ USD) *</label>
-            <input type="number" step="0.01" min="0.01" id="saleAmount" required placeholder="0.00" class="w-full px-3 py-2 text-sm font-bold text-slate-900 rounded-xl border border-slate-200">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Artículos / Concepto *</label>
-          <input type="text" id="saleConcept" required placeholder="Descripción de prendas..." class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-        </div>
-
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="dismissActionModal('modalSale')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
-          <button type="submit" class="px-5 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl">Guardar Compra</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: REGISTRAR ABONO -->
-  <div id="modalPayment" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 modal-backdrop">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform modal-card border border-emerald-200">
-      <div class="px-6 py-4 border-b border-emerald-100 bg-emerald-50/80 flex items-center justify-between">
-        <h3 class="text-base font-bold text-emerald-900 flex items-center gap-2">
-          <i class="fa-solid fa-hand-holding-dollar text-fintech-600"></i> Registrar Abono a Cuenta
-        </h3>
-        <button onclick="dismissActionModal('modalPayment')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <form id="paymentForm" onsubmit="handleSavePayment(event)" class="p-6 space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Cliente *</label>
-          <select id="paymentClientId" onchange="onPaymentClientOrBrandChanged()" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200"></select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Marca a la que se abona *</label>
-          <div class="grid grid-cols-3 gap-2.5">
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="paymentBrand" value="EPI Boutique" checked onchange="onPaymentClientOrBrandChanged()" class="brand-radio-input sr-only">
-              <div class="brand-btn-boutique border border-slate-200 rounded-xl p-2.5 text-center bg-slate-50">
-                <i class="fa-solid fa-person-dress text-lg block mb-0.5"></i>
-                <span class="font-extrabold text-xs">EPI Boutique</span>
-              </div>
-            </label>
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="paymentBrand" value="Exclusive" onchange="onPaymentClientOrBrandChanged()" class="brand-radio-input sr-only">
-              <div class="brand-btn-exclusive border border-slate-200 rounded-xl p-2.5 text-center bg-slate-50">
-                <i class="fa-solid fa-crown text-base block mb-0.5"></i>
-                <span class="font-extrabold text-xs">Exclusive</span>
-              </div>
-            </label>
-            <label class="brand-radio-label relative block">
-              <input type="radio" name="paymentBrand" value="Beauty" onchange="onPaymentClientOrBrandChanged()" class="brand-radio-input sr-only">
-              <div class="brand-btn-beauty border border-slate-200 rounded-xl p-2.5 text-center bg-slate-50">
-                <i class="fa-solid fa-wand-magic-sparkles text-base block mb-0.5"></i>
-                <span class="font-extrabold text-xs">Beauty</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- PANEL DE SALDO DE LA MARCA & VALIDACIÓN -->
-        <div id="paymentBrandDebtPanel" class="p-3.5 rounded-xl border bg-slate-50 border-slate-200 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase text-slate-500">Deuda en <span id="paymentSelectedBrandName">EPI Boutique</span>:</span>
-            <span id="paymentSelectedBrandDebtAmount" class="text-base font-black text-rose-600">$0.00 USD</span>
-          </div>
-          <div id="otherBrandsSuggestionsBox" class="hidden pt-2 border-t border-slate-200">
-            <p class="text-[11px] font-semibold text-slate-600 mb-1.5">Otras marcas con deuda activa:</p>
-            <div id="otherBrandsButtonsList" class="flex flex-wrap gap-1.5"></div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Fecha *</label>
-            <input type="date" id="paymentDate" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Monto a Abonar ($ USD) *</label>
-            <input type="number" step="0.01" min="0.01" id="paymentAmountUSD" required placeholder="0.00" oninput="validatePaymentAmountStrictly()" class="w-full px-3 py-2 text-sm font-bold text-fintech-700 rounded-xl border border-slate-200">
-          </div>
-        </div>
-
-        <div id="paymentAmountErrorBox" class="hidden p-2.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 text-xs font-bold flex items-center gap-2">
-          <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
-          <span id="paymentAmountErrorText">Error en el monto.</span>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Método de Pago *</label>
-          <select id="paymentMethod" onchange="toggleBsFields()" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-            <option value="Efectivo ($ USD)">💵 Efectivo ($ USD)</option>
-            <option value="Zelle">🇺🇸 Zelle</option>
-            <option value="Bolívares (Bs.)">🇻🇪 Bolívares (Pago Móvil)</option>
-            <option value="USDT (Binance)">🪙 USDT (Binance Pay)</option>
-          </select>
-        </div>
-
-        <div id="bsDetailsBox" class="p-3 bg-emerald-50/50 border border-emerald-200 rounded-xl space-y-2 hidden">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-700 uppercase">Tasa de Cambio (Bs/$)</label>
-              <input type="number" step="0.01" id="paymentRate" placeholder="Ej. 42.50" oninput="calculateBsEquivalent()" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-700 uppercase">Total en Bolívares</label>
-              <input type="text" id="paymentBsTotal" placeholder="0.00 Bs." readonly class="w-full px-2.5 py-1.5 text-xs bg-slate-100 rounded-lg border border-slate-200 font-bold text-slate-800">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nº Comprobante / Ref</label>
-          <input type="text" id="paymentRef" placeholder="Ej. Zelle #4590 / Ref 1234" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-        </div>
-
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="dismissActionModal('modalPayment')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
-          <button type="submit" id="btnSubmitPayment" class="px-5 py-2 text-sm font-bold text-white bg-fintech-600 hover:bg-fintech-700 rounded-xl">Procesar Abono</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: REGISTRAR / EDITAR CLIENTE -->
-  <div id="modalClient" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 modal-backdrop">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform modal-card">
-      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-          <i class="fa-solid fa-user-plus text-indigo-600"></i> Registrar Nuevo Cliente
-        </h3>
-        <button onclick="dismissActionModal('modalClient')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <form id="clientForm" onsubmit="handleSaveClient(event)" class="p-6 space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nombre Completo *</label>
-          <input type="text" id="clientName" required placeholder="Ej. Carlos Mendoza" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Cédula / DNI / RIF *</label>
-            <input type="text" id="clientDoc" required placeholder="V-18456789" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Teléfono / WhatsApp *</label>
-            <input type="tel" id="clientPhone" required placeholder="+58 412 1234567" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200">
-          </div>
-        </div>
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="dismissActionModal('modalClient')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
-          <button type="submit" class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl">Guardar Cliente</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: AJUSTES GOOGLE SHEETS / NUBE -->
-  <div id="modalSheets" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 modal-backdrop">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden modal-card">
-      <div class="p-5 border-b border-slate-200 bg-emerald-50/70 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-fintech-600 text-white flex items-center justify-center font-bold text-lg shadow">
-            <i class="fa-solid fa-table"></i>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900">Sincronización en la Nube (Google Sheets & Firebase)</h3>
-            <p class="text-xs text-slate-500">Respaldo automático con saldos por Marca</p>
-          </div>
-        </div>
-        <button onclick="closeModalDirect('modalSheets')" class="text-slate-400 hover:text-slate-600 p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5 text-sm">
-        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-          <label class="block text-xs font-bold text-slate-700 uppercase">URL de Google Apps Script (Opcional):</label>
-          <div class="flex gap-2">
-            <input type="url" id="sheetsWebAppUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 font-mono">
-            <button onclick="saveSheetsUrl()" class="px-4 py-2 bg-slate-800 text-white font-semibold text-xs rounded-xl">Guardar</button>
-          </div>
-          <div class="flex gap-2 pt-1">
-            <button onclick="triggerFullSync()" class="px-3.5 py-1.5 bg-fintech-600 text-white font-semibold text-xs rounded-lg">Sincronizar Todo Ahora</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
-        <button onclick="closeModalDirect('modalSheets')" class="px-5 py-2 text-sm font-semibold rounded-xl bg-slate-800 text-white">Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- IFRAME OCULTO PARA IMPRESIÓN -->
-  <iframe id="cleanPrintIframe" class="hidden"></iframe>
-
-  <!-- JAVASCRIPT: LÓGICA, SINCRONIZACIÓN Y ACCESO -->
   <script>
-    // CREDENCIALES
-    const VALID_USER = "epiabonos";
-    const VALID_PASS = "abonos1234#";
-    const AUTH_SESSION_KEY = "credicontrol_session_active_v1";
+    // Las 100 palabras extraídas de la lista del Nivel 10 Infantil con su traducción
+    const wordsData = [
+      { id: 1, word: "weather", meaning: "clima / tiempo" },
+      { id: 2, word: "sunny", meaning: "soleado" },
+      { id: 3, word: "rainy", meaning: "lluvioso" },
+      { id: 4, word: "cloudy", meaning: "nublado" },
+      { id: 5, word: "windy", meaning: "ventoso" },
+      { id: 6, word: "snowy", meaning: "nevado" },
+      { id: 7, word: "behind", meaning: "detrás de" },
+      { id: 8, word: "between", meaning: "entre (dos cosas)" },
+      { id: 9, word: "there is", meaning: "hay (singular)" },
+      { id: 10, word: "there are", meaning: "hay (plural)" },
+      { id: 11, word: "wonderful", meaning: "maravilloso" },
+      { id: 12, word: "practice", meaning: "practicar / práctica" },
+      { id: 13, word: "sports", meaning: "deportes" },
+      { id: 14, word: "study", meaning: "estudiar" },
+      { id: 15, word: "go to bed", meaning: "irse a la cama / acostarse" },
+      { id: 16, word: "flowers", meaning: "flores" },
+      { id: 17, word: "early", meaning: "temprano" },
+      { id: 18, word: "everyday", meaning: "todos los días / diario" },
+      { id: 19, word: "morning", meaning: "mañana" },
+      { id: 20, word: "afternoon", meaning: "tarde" },
+      { id: 21, word: "evening", meaning: "atardecer / noche" },
+      { id: 22, word: "night", meaning: "noche" },
+      { id: 23, word: "routine", meaning: "rutina" },
+      { id: 24, word: "stay", meaning: "quedarse / permanecer" },
+      { id: 25, word: "drive", meaning: "conducir / manejar" },
+      { id: 26, word: "speak", meaning: "hablar" },
+      { id: 27, word: "sing", meaning: "cantar" },
+      { id: 28, word: "play", meaning: "jugar / tocar (instrumento)" },
+      { id: 29, word: "read", meaning: "leer" },
+      { id: 30, word: "write", meaning: "escribir" },
+      { id: 31, word: "cook", meaning: "cocinar" },
+      { id: 32, word: "swim", meaning: "nadar" },
+      { id: 33, word: "walk", meaning: "caminar" },
+      { id: 34, word: "climb", meaning: "escalar / subir" },
+      { id: 35, word: "watch", meaning: "mirar / reloj" },
+      { id: 36, word: "listen", meaning: "escuchar" },
+      { id: 37, word: "action", meaning: "acción" },
+      { id: 38, word: "store", meaning: "tienda / almacén" },
+      { id: 39, word: "shop", meaning: "tienda / comprar" },
+      { id: 40, word: "sell", meaning: "vender" },
+      { id: 41, word: "expensive", meaning: "caro / costoso" },
+      { id: 42, word: "cheap", meaning: "barato" },
+      { id: 43, word: "dollars", meaning: "dólares" },
+      { id: 44, word: "oranges", meaning: "naranjas" },
+      { id: 45, word: "price", meaning: "precio" },
+      { id: 46, word: "cost", meaning: "costo / costar" },
+      { id: 47, word: "cashier", meaning: "cajero/a" },
+      { id: 48, word: "market", meaning: "mercado" },
+      { id: 49, word: "customer", meaning: "cliente" },
+      { id: 50, word: "receipt", meaning: "recibo / factura" },
+      { id: 51, word: "change", meaning: "cambio / vuelto" },
+      { id: 52, word: "wallet", meaning: "billetera / cartera" },
+      { id: 53, word: "discount", meaning: "descuento" },
+      { id: 54, word: "travel", meaning: "viajar" },
+      { id: 55, word: "trip", meaning: "viaje" },
+      { id: 56, word: "plan", meaning: "plan / planear" },
+      { id: 57, word: "by train", meaning: "en tren" },
+      { id: 58, word: "by airplane", meaning: "en avión" },
+      { id: 59, word: "by car", meaning: "en auto / carro" },
+      { id: 60, word: "airplane", meaning: "avión" },
+      { id: 61, word: "train", meaning: "tren" },
+      { id: 62, word: "boat", meaning: "bote / barco" },
+      { id: 63, word: "motorbike", meaning: "motocicleta" },
+      { id: 64, word: "bicycle", meaning: "bicicleta" },
+      { id: 65, word: "bike", meaning: "bici" },
+      { id: 66, word: "fast", meaning: "rápido" },
+      { id: 67, word: "slow", meaning: "lento" },
+      { id: 68, word: "ticket", meaning: "boleto / pasaje" },
+      { id: 69, word: "station", meaning: "estación" },
+      { id: 70, word: "airport", meaning: "aeropuerto" },
+      { id: 71, word: "harbor", meaning: "puerto" },
+      { id: 72, word: "journey", meaning: "trayecto / viaje largo" },
+      { id: 73, word: "luggage", meaning: "equipaje" },
+      { id: 74, word: "suitcase", meaning: "maleta" },
+      { id: 75, word: "passport", meaning: "pasaporte" },
+      { id: 76, word: "trivia", meaning: "trivias / curiosidades" },
+      { id: 77, word: "millionaire", meaning: "millonario" },
+      { id: 78, word: "sentence", meaning: "oración / frase" },
+      { id: 79, word: "dialogue", meaning: "diálogo" },
+      { id: 80, word: "question", meaning: "pregunta" },
+      { id: 81, word: "answer", meaning: "respuesta / responder" },
+      { id: 82, word: "building memories", meaning: "construir recuerdos" },
+      { id: 83, word: "celebration", meaning: "celebración" },
+      { id: 84, word: "celebrate", meaning: "celebrar" },
+      { id: 85, word: "holiday", meaning: "día festivo / vacaciones" },
+      { id: 86, word: "tradition", meaning: "tradición" },
+      { id: 87, word: "culture", meaning: "cultura" },
+      { id: 88, word: "memory", meaning: "memoria / recuerdo" },
+      { id: 89, word: "craft", meaning: "manualidad / artesanía" },
+      { id: 90, word: "respect", meaning: "respeto / respetar" },
+      { id: 91, word: "fabulous trip", meaning: "viaje fabuloso" },
+      { id: 92, word: "show and tell", meaning: "mostrar y contar" },
+      { id: 93, word: "presentation", meaning: "presentación" },
+      { id: 94, word: "speech", meaning: "discurso" },
+      { id: 95, word: "stage", meaning: "escenario / etapa" },
+      { id: 96, word: "audience", meaning: "audiencia / público" },
+      { id: 97, word: "applause", meaning: "aplausos" },
+      { id: 98, word: "trophy", meaning: "trofeo" },
+      { id: 99, word: "medal", meaning: "medalla" },
+      { id: 100, word: "spelling bee", meaning: "concurso de deletreo" }
+    ];
 
-    // FIREBASE INICIALIZACIÓN
-    const firebaseConfig = {
-      apiKey: "AIzaSyATMDVPl_wT71JijcWA1oAdYkOs9_eyBOY",
-      authDomain: "credicontrol-tienda.firebaseapp.com",
-      projectId: "credicontrol-tienda",
-      storageBucket: "credicontrol-tienda.firebasestorage.app",
-      messagingSenderId: "946287073799",
-      appId: "1:946287073799:web:992f3dec57e97be336e8a2"
-    };
+    let currentIndex = 0;
 
-    let db = null;
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      console.log("Firebase Firestore inicializado exitosamente");
-    } catch (e) {
-      console.error("Firebase Init Error:", e);
+    function updateCard() {
+      const current = wordsData[currentIndex];
+      // Modo Estudio
+      document.getElementById('study-index').textContent = `Palabra ${current.id} de 100`;
+      document.getElementById('study-word').textContent = current.word;
+      document.getElementById('study-meaning').textContent = current.meaning;
+
+      // Modo Reto
+      document.getElementById('quiz-index').textContent = `Reto - Palabra ${current.id} de 100`;
+      document.getElementById('quiz-meaning').textContent = `Significado: ${current.meaning}`;
+      document.getElementById('quiz-input').value = '';
+      document.getElementById('quiz-feedback').textContent = '';
     }
 
-    const BRANDS = ["EPI Boutique", "Exclusive", "Beauty"];
-    let appData = { clients: [], transactions: [] };
-    let currentClientIdForDetail = null;
-    let currentHistoryFilter = 'all';
-    let returnToHistoryOnClose = false;
-    let currentReportPeriod = 'all';
-
-    window.onload = function() {
-      const isLogged = sessionStorage.getItem(AUTH_SESSION_KEY) === 'true';
-      if (!isLogged) showLoginScreen();
-      else showAppScreen();
-    };
-
-    function showLoginScreen() {
-      document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('loginScreen').classList.add('flex');
-      document.getElementById('mainApp').classList.add('hidden');
-    }
-
-    function showAppScreen() {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('mainApp').classList.remove('hidden');
-      document.getElementById('mainApp').classList.add('flex');
-      startCloudSync();
-    }
-
-    function handleLoginSubmit(e) {
-      if (e) e.preventDefault();
-      const user = document.getElementById('loginUsername').value.trim();
-      const pass = document.getElementById('loginPassword').value.trim();
-      const card = document.getElementById('loginCard');
-
-      if (user === VALID_USER && pass === VALID_PASS) {
-        sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
-        showToast('Acceso concedido', 'success');
-        showAppScreen();
-      } else {
-        document.getElementById('loginErrorMsg').classList.remove('hidden');
-        card.classList.add('shake-anim');
-        setTimeout(() => card.classList.remove('shake-anim'), 400);
+    function nextWord() {
+      if (currentIndex < wordsData.length - 1) {
+        currentIndex++;
+        updateCard();
       }
     }
 
-    function logoutSession() {
-      sessionStorage.removeItem(AUTH_SESSION_KEY);
-      location.reload();
-    }
-
-    function togglePasswordVisibility() {
-      const input = document.getElementById('loginPassword');
-      const icon = document.getElementById('eyeIcon');
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.className = 'fa-regular fa-eye-slash text-sm text-indigo-400';
-      } else {
-        input.type = 'password';
-        icon.className = 'fa-regular fa-eye text-sm text-slate-400';
+    function prevWord() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
       }
     }
 
-    // SINCRONIZACIÓN CLOUD FIRESTORE
-    function startCloudSync() {
-      if (!db) {
-        loadFromLocal();
-        refreshDashboard();
-        return;
-      }
-
-      db.collection("clients").onSnapshot(snapshot => {
-        appData.clients = [];
-        snapshot.forEach(doc => appData.clients.push({ id: doc.id, ...doc.data() }));
-        saveToLocal();
-        refreshDashboard();
-      });
-
-      db.collection("transactions").onSnapshot(snapshot => {
-        appData.transactions = [];
-        snapshot.forEach(doc => appData.transactions.push({ id: doc.id, ...doc.data() }));
-        saveToLocal();
-        refreshDashboard();
-      });
+    // Funciones de Síntesis de Voz
+    function pronounceWord() {
+      window.speechSynthesis.cancel();
+      const current = wordsData[currentIndex];
+      const utterance = new SpeechSynthesisUtterance(current.word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
     }
 
-    function saveToLocal() {
-      localStorage.setItem('credicontrol_local_cache', JSON.stringify(appData));
-    }
+    function spellWord() {
+      window.speechSynthesis.cancel();
+      const word = wordsData[currentIndex].word;
+      
+      // Primero dice la palabra completa
+      const startUtterance = new SpeechSynthesisUtterance(word);
+      startUtterance.lang = 'en-US';
+      window.speechSynthesis.speak(startUtterance);
 
-    function loadFromLocal() {
-      const cached = localStorage.getItem('credicontrol_local_cache');
-      if (cached) appData = JSON.parse(cached);
-    }
-
-    // MATEMÁTICA Y SALDOS
-    function getClientBrandMetrics(clientId) {
-      const txs = appData.transactions.filter(t => t.clientId === clientId);
-      const brandsData = {
-        'EPI Boutique': { purchases: 0, paid: 0, balance: 0 },
-        'Exclusive': { purchases: 0, paid: 0, balance: 0 },
-        'Beauty': { purchases: 0, paid: 0, balance: 0 }
-      };
-
-      let totalPurchases = 0;
-      let totalPaid = 0;
-
-      txs.forEach(t => {
-        const b = t.brand || 'EPI Boutique';
-        const amt = parseFloat(t.amount || 0);
-        if (!brandsData[b]) brandsData[b] = { purchases: 0, paid: 0, balance: 0 };
-        if (t.type === 'SALE') {
-          brandsData[b].purchases += amt;
-          totalPurchases += amt;
-        } else if (t.type === 'PAYMENT') {
-          brandsData[b].paid += amt;
-          totalPaid += amt;
+      // Deletrea letra por letra
+      for (let char of word) {
+        if (char === ' ') {
+          const pause = new SpeechSynthesisUtterance("space");
+          pause.lang = 'en-US';
+          window.speechSynthesis.speak(pause);
+        } else {
+          const letterUtterance = new SpeechSynthesisUtterance(char.toUpperCase());
+          letterUtterance.lang = 'en-US';
+          letterUtterance.rate = 0.8;
+          window.speechSynthesis.speak(letterUtterance);
         }
-      });
-
-      for (const b in brandsData) {
-        brandsData[b].balance = Number(Math.max(0, brandsData[b].purchases - brandsData[b].paid).toFixed(2));
       }
 
-      return {
-        brands: brandsData,
-        debtBoutique: brandsData['EPI Boutique'].balance,
-        debtExclusive: brandsData['Exclusive'].balance,
-        debtBeauty: brandsData['Beauty'].balance,
-        totalPurchases,
-        totalPaid,
-        totalBalance: Math.max(0, totalPurchases - totalPaid)
-      };
+      // Repite la palabra al final (estilo Spelling Bee)
+      const endUtterance = new SpeechSynthesisUtterance(word);
+      endUtterance.lang = 'en-US';
+      window.speechSynthesis.speak(endUtterance);
     }
 
-    function getGlobalMetrics() {
-      let totalDebt = 0, debtBoutique = 0, debtExclusive = 0, debtBeauty = 0, totalPaid = 0, debtorsCount = 0;
-      appData.clients.forEach(c => {
-        const m = getClientBrandMetrics(c.id);
-        if (m.totalBalance > 0.01) debtorsCount++;
-        totalDebt += m.totalBalance;
-        debtBoutique += m.debtBoutique;
-        debtExclusive += m.debtExclusive;
-        debtBeauty += m.debtBeauty;
-        totalPaid += m.totalPaid;
-      });
-
-      return { totalDebt, debtBoutique, debtExclusive, debtBeauty, totalPaid, debtorsCount, totalClients: appData.clients.length };
-    }
-
-    function refreshDashboard() {
-      const g = getGlobalMetrics();
-      document.getElementById('statTotalDebt').innerText = `$${formatCurrency(g.totalDebt)}`;
-      document.getElementById('statDebtBoutique').innerText = `$${formatCurrency(g.debtBoutique)}`;
-      document.getElementById('statDebtExclusive').innerText = `$${formatCurrency(g.debtExclusive)}`;
-      document.getElementById('statDebtBeauty').innerText = `$${formatCurrency(g.debtBeauty)}`;
-      document.getElementById('statTotalPaid').innerText = `$${formatCurrency(g.totalPaid)}`;
-      document.getElementById('statDebtorCount').innerText = g.debtorsCount;
-      document.getElementById('statTotalClients').innerText = g.totalClients;
-
-      populateClientSelects();
-      renderClientsTable();
-      if (currentClientIdForDetail) showClientHistory(currentClientIdForDetail);
-    }
-
-    function populateClientSelects() {
-      const saleSelect = document.getElementById('saleClientId');
-      const paySelect = document.getElementById('paymentClientId');
-      let options = '<option value="">-- Selecciona un cliente --</option>';
-
-      appData.clients.forEach(c => {
-        options += `<option value="${c.id}">${c.name} (${c.doc})</option>`;
-      });
-
-      if (saleSelect) saleSelect.innerHTML = options;
-      if (paySelect) paySelect.innerHTML = options;
-    }
-
-    function renderClientsTable() {
-      const tbody = document.getElementById('clientsTableBody');
-      const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
-      const filter = document.getElementById('filterStatus')?.value || 'debt';
-
-      tbody.innerHTML = '';
-      const filtered = appData.clients.filter(c => {
-        const m = getClientBrandMetrics(c.id);
-        const match = c.name.toLowerCase().includes(search) || c.doc.toLowerCase().includes(search);
-        if (!match) return false;
-        if (filter === 'debt') return m.totalBalance > 0.01;
-        if (filter === 'paid') return m.totalBalance <= 0.01;
-        return true;
-      });
-
-      filtered.forEach(c => {
-        const m = getClientBrandMetrics(c.id);
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-bold text-slate-800 cursor-pointer" onclick="showClientHistory('${c.id}')">${c.name}<br><small class="text-slate-400 font-normal">${c.doc}</small></td>
-          <td class="py-3 px-4">
-            <span class="text-xs text-purple-700 font-semibold">Boutique: $${formatCurrency(m.debtBoutique)}</span> •
-            <span class="text-xs text-blue-700 font-semibold">Exclusive: $${formatCurrency(m.debtExclusive)}</span> •
-            <span class="text-xs text-pink-700 font-semibold">Beauty: $${formatCurrency(m.debtBeauty)}</span>
-          </td>
-          <td class="py-3 px-4 text-right">$${formatCurrency(m.totalPurchases)}</td>
-          <td class="py-3 px-4 text-right text-emerald-600 font-semibold">$${formatCurrency(m.totalPaid)}</td>
-          <td class="py-3 px-4 text-right font-black ${m.totalBalance > 0 ? 'text-rose-600' : 'text-slate-400'}">$${formatCurrency(m.totalBalance)}</td>
-          <td class="py-3 px-4 text-center">
-            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${m.totalBalance > 0 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-              ${m.totalBalance > 0 ? 'Con Deuda' : 'Al Día'}
-            </span>
-          </td>
-          <td class="py-3 px-4 text-center">
-            <button onclick="showClientHistory('${c.id}')" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg"><i class="fa-solid fa-eye"></i></button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ACCIONES
-    function showClientHistory(clientId) {
-      currentClientIdForDetail = clientId;
-      const c = appData.clients.find(x => x.id === clientId);
-      if (!c) return;
-
-      document.getElementById('detailClientName').innerText = c.name;
-      document.getElementById('detailClientDoc').innerText = c.doc;
-      document.getElementById('detailClientPhone').innerText = c.phone;
-
-      const m = getClientBrandMetrics(clientId);
-      document.getElementById('detailDebtBoutique').innerText = `$${formatCurrency(m.debtBoutique)}`;
-      document.getElementById('detailDebtExclusive').innerText = `$${formatCurrency(m.debtExclusive)}`;
-      document.getElementById('detailDebtBeauty').innerText = `$${formatCurrency(m.debtBeauty)}`;
-      document.getElementById('detailClientBalance').innerText = `$${formatCurrency(m.totalBalance)}`;
-
-      const tbody = document.getElementById('historyTableBody');
-      tbody.innerHTML = '';
-      const txs = appData.transactions.filter(t => t.clientId === clientId).sort((a,b) => new Date(b.date) - new Date(a.date));
-
-      txs.forEach(t => {
-        const tr = document.createElement('tr');
-        const isSale = t.type === 'SALE';
-        tr.className = "border-b border-slate-100 text-xs";
-        tr.innerHTML = `
-          <td class="py-2.5 px-3">${t.date}</td>
-          <td class="py-2.5 px-3 font-semibold">${t.brand}</td>
-          <td class="py-2.5 px-3">${isSale ? t.concept : t.method}</td>
-          <td class="py-2.5 px-3 text-right font-bold ${isSale ? 'text-rose-600' : 'text-emerald-600'}">${isSale ? '+' : '-'}$${formatCurrency(t.amount)}</td>
-          <td class="py-2.5 px-3 text-right font-semibold">$${formatCurrency(t.amount)}</td>
-          <td class="py-2.5 px-3 text-center">
-            <button onclick="deleteTx('${t.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      openModalDirect('modalClientHistory');
-    }
-
-    async function handleSaveSale(e) {
+    function checkSpelling(e) {
       e.preventDefault();
-      const clientId = document.getElementById('saleClientId').value;
-      const brand = document.querySelector('input[name="saleBrand"]:checked').value;
-      const amount = parseFloat(document.getElementById('saleAmount').value);
-      const concept = document.getElementById('saleConcept').value.trim();
-      const date = document.getElementById('saleDate').value;
+      const userValue = document.getElementById('quiz-input').value.trim().toLowerCase();
+      const actualWord = wordsData[currentIndex].word.toLowerCase();
+      const feedback = document.getElementById('quiz-feedback');
 
-      const newTx = { clientId, brand, amount, concept, date, type: 'SALE', createdAt: Date.now() };
-
-      if (db) await db.collection("transactions").add(newTx);
-      else appData.transactions.push({ id: 'tx_' + Date.now(), ...newTx });
-
-      closeModalDirect('modalSale');
-      showToast('Venta registrada', 'success');
-      refreshDashboard();
-    }
-
-    async function handleSavePayment(e) {
-      e.preventDefault();
-      if (!validatePaymentAmountStrictly()) return;
-
-      const clientId = document.getElementById('paymentClientId').value;
-      const brand = document.querySelector('input[name="paymentBrand"]:checked').value;
-      const amount = parseFloat(document.getElementById('paymentAmountUSD').value);
-      const method = document.getElementById('paymentMethod').value;
-      const date = document.getElementById('paymentDate').value;
-
-      const newTx = { clientId, brand, amount, method, date, type: 'PAYMENT', createdAt: Date.now() };
-
-      if (db) await db.collection("transactions").add(newTx);
-      else appData.transactions.push({ id: 'tx_' + Date.now(), ...newTx });
-
-      closeModalDirect('modalPayment');
-      showToast('Abono procesado', 'success');
-      refreshDashboard();
-    }
-
-    async function handleSaveClient(e) {
-      e.preventDefault();
-      const name = document.getElementById('clientName').value.trim();
-      const doc = document.getElementById('clientDoc').value.trim();
-      const phone = document.getElementById('clientPhone').value.trim();
-
-      const newClient = { name, doc, phone, createdAt: Date.now() };
-
-      if (db) await db.collection("clients").add(newClient);
-      else appData.clients.push({ id: 'cli_' + Date.now(), ...newClient });
-
-      closeModalDirect('modalClient');
-      showToast('Cliente guardado', 'success');
-      refreshDashboard();
-    }
-
-    async function deleteTx(id) {
-      if (!confirm("¿Deseas anular esta transacción?")) return;
-      if (db) await db.collection("transactions").doc(id).delete();
-      else appData.transactions = appData.transactions.filter(t => t.id !== id);
-      showToast('Transacción eliminada', 'info');
-      refreshDashboard();
-    }
-
-    function onPaymentClientOrBrandChanged() {
-      const clientId = document.getElementById('paymentClientId').value;
-      const brand = document.querySelector('input[name="paymentBrand"]:checked')?.value || 'EPI Boutique';
-      if (!clientId) return;
-
-      const m = getClientBrandMetrics(clientId);
-      const brandDebt = m.brands[brand]?.balance || 0;
-
-      document.getElementById('paymentSelectedBrandName').innerText = brand;
-      document.getElementById('paymentSelectedBrandDebtAmount').innerText = `$${formatCurrency(brandDebt)} USD`;
-
-      validatePaymentAmountStrictly();
-    }
-
-    function validatePaymentAmountStrictly() {
-      const clientId = document.getElementById('paymentClientId').value;
-      const brand = document.querySelector('input[name="paymentBrand"]:checked')?.value || 'EPI Boutique';
-      const amount = parseFloat(document.getElementById('paymentAmountUSD').value) || 0;
-      const errorBox = document.getElementById('paymentAmountErrorBox');
-      const errorText = document.getElementById('paymentAmountErrorText');
-      const btnSubmit = document.getElementById('btnSubmitPayment');
-
-      if (!clientId) return false;
-      const m = getClientBrandMetrics(clientId);
-      const brandDebt = m.brands[brand]?.balance || 0;
-
-      if (brandDebt <= 0) {
-        errorBox.classList.remove('hidden');
-        errorText.innerText = `Este cliente no debe en ${brand}. Elige otra marca.`;
-        btnSubmit.disabled = true;
-        return false;
+      if (userValue === actualWord) {
+        feedback.className = "feedback correct";
+        feedback.textContent = "¡Correcto! Excelente deletreo 🎉";
+        pronounceWord();
+      } else {
+        feedback.className = "feedback error";
+        feedback.textContent = `Inténtalo de nuevo. La respuesta correcta era: "${wordsData[currentIndex].word}"`;
       }
+    }
 
-      if (amount > brandDebt) {
-        errorBox.classList.remove('hidden');
-        errorText.innerText = `El monto supera la deuda de la marca ($${formatCurrency(brandDebt)}).`;
-        btnSubmit.disabled = true;
-        return false;
+    function setMode(mode) {
+      const studyCard = document.getElementById('study-card');
+      const quizCard = document.getElementById('quiz-card');
+      const listCard = document.getElementById('list-card');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      if (mode === 'study') {
+        buttons[0].classList.add('active');
+        studyCard.style.display = 'block';
+        quizCard.style.display = 'none';
+        listCard.style.display = 'none';
+      } else if (mode === 'quiz') {
+        buttons[1].classList.add('active');
+        studyCard.style.display = 'none';
+        quizCard.style.display = 'block';
+        listCard.style.display = 'none';
+        pronounceWord();
+      } else if (mode === 'list') {
+        buttons[2].classList.add('active');
+        studyCard.style.display = 'none';
+        quizCard.style.display = 'none';
+        listCard.style.display = 'block';
+        renderFullList();
       }
-
-      errorBox.classList.add('hidden');
-      btnSubmit.disabled = false;
-      return true;
     }
 
-    // MODALES & UTILS
-    function openModalDirect(id) {
-      const el = document.getElementById(id);
-      if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
+    function renderFullList(filter = '') {
+      const listContainer = document.getElementById('word-list-items');
+      listContainer.innerHTML = '';
+
+      const filtered = wordsData.filter(item => 
+        item.word.toLowerCase().includes(filter.toLowerCase()) || 
+        item.meaning.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `<span><strong>#${item.id}</strong> ${item.word}</span> <span style="color:#718096">${item.meaning}</span>`;
+        div.onclick = () => {
+          currentIndex = item.id - 1;
+          setMode('study');
+          updateCard();
+        };
+        listContainer.appendChild(div);
+      });
     }
 
-    function closeModalDirect(id) {
-      const el = document.getElementById(id);
-      if (el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+    function filterList() {
+      const query = document.getElementById('search-bar').value;
+      renderFullList(query);
     }
 
-    function dismissActionModal(id) { closeModalDirect(id); }
-    function closeClientHistoryModal() { closeModalDirect('modalClientHistory'); currentClientIdForDetail = null; }
-    function openClientCreationModal() { openModalDirect('modalClient'); }
-    function openGlobalSaleModal() { populateClientSelects(); openModalDirect('modalSale'); }
-    function openGlobalPaymentModal() { populateClientSelects(); openModalDirect('modalPayment'); }
-    function openSheetsModal() { openModalDirect('modalSheets'); }
-    function openBrandReportModal() { openModalDirect('modalBrandReport'); }
-
-    function formatCurrency(v) { return Number(v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-
-    function showToast(msg, type = 'info') {
-      const c = document.getElementById('toastContainer');
-      const t = document.createElement('div');
-      t.className = `p-3 rounded-xl text-white text-xs font-semibold shadow-lg ${type === 'success' ? 'bg-emerald-600' : 'bg-slate-800'}`;
-      t.innerText = msg;
-      c.appendChild(t);
-      setTimeout(() => t.remove(), 3000);
-    }
+    // Inicializar
+    updateCard();
   </script>
 </body>
 </html>
